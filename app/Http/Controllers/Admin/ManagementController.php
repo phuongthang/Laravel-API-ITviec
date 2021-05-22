@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Organization;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class ManagementController extends Controller
 {
@@ -18,7 +20,7 @@ class ManagementController extends Controller
      */
     public function listOrganization()
     {
-        $organizations = Organization::all();
+        $organizations = Organization::where('flag_delete',1)->get();
         if($organizations){
             return response()->json(['organizations' => $organizations],Response::HTTP_OK);
         }
@@ -36,11 +38,63 @@ class ManagementController extends Controller
      */
     public function listUser()
     {
-        $users = User::all();
+        $users = User::where('flag_delete',1)->get();
         if($users){
             return response()->json(['users' => $users],Response::HTTP_OK);
         }
         else{
+            return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    public function deleteOrganization(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $organization = Organization::find($request->id);
+            if($organization){
+                $organization->flag_delete = 0;
+
+                $organization->save();
+
+                DB::commit();
+
+                return response()->json(Response::HTTP_OK);
+            }
+            else
+            {
+                return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    public function deleteUser(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $user = User::find($request->id);
+            if($user){
+                $user->flag_delete = 0;
+
+                $user->save();
+
+                DB::commit();
+
+                return response()->json(Response::HTTP_OK);
+            }
+            else
+            {
+                return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+        } catch (Exception $e) {
+            DB::rollBack();
             return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
