@@ -41,8 +41,12 @@ Route::prefix('admin')->group(function(){
     Route::post('/profile',[AdminController::class,'update']);
     Route::get('/management/organizations',[ManagementController::class,'listOrganization']);
     Route::get('/management/users',[ManagementController::class,'listUser']);
+    Route::get('/management/jobs',[ManagementController::class,'listJob']);
     Route::post('/organization/delete',[ManagementController::class,'deleteOrganization']);
     Route::post('/user/delete',[ManagementController::class,'deleteUser']);
+    Route::post('/job/delete',[ManagementController::class,'deleteJob']);
+    Route::post('/job/active',[ManagementController::class,'activeJob']);
+    
 });
 
 //organization
