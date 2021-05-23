@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Job;
 use App\Models\Organization;
 use App\Models\User;
 use Exception;
@@ -48,6 +49,22 @@ class ManagementController extends Controller
 
     }
 
+    public function listJob()
+    {
+        $jobs = DB::table('jobs')
+        ->join('organizations', 'jobs.organization_id', '=', 'organizations.id')
+        ->where('jobs.flag_delete',1)
+        ->select('jobs.*', 'organizations.image', 'organizations.fullname')
+        ->get();
+        if($jobs){
+            return response()->json(['jobs' => $jobs],Response::HTTP_OK);
+        }
+        else{
+            return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
     public function deleteOrganization(Request $request)
     {
         DB::beginTransaction();
@@ -83,6 +100,58 @@ class ManagementController extends Controller
                 $user->flag_delete = 0;
 
                 $user->save();
+
+                DB::commit();
+
+                return response()->json(Response::HTTP_OK);
+            }
+            else
+            {
+                return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    public function deleteJob(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $job = Job::find($request->id);
+            if($job){
+                $job->flag_delete = 0;
+
+                $job->save();
+
+                DB::commit();
+
+                return response()->json(Response::HTTP_OK);
+            }
+            else
+            {
+                return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    public function ActiveJob(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $job = Job::find($request->id);
+            if($job){
+                $job->active = $request->flag;
+
+                $job->save();
 
                 DB::commit();
 

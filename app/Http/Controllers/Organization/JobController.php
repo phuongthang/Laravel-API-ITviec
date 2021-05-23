@@ -18,9 +18,13 @@ class JobController extends Controller
      */
     public function index(Request $request)
     {
-        $job = Job::where('organization_id',$request->organization_id)->get();
-        if($job){
-            return response()->json(['jobs'=>$job],Response::HTTP_OK);
+        $jobs = DB::table('jobs')
+        ->join('organizations', 'jobs.organization_id', '=', 'organizations.id')
+        ->where([['jobs.flag_delete',1],['jobs.organization_id',$request->organization_id]])
+        ->select('jobs.*', 'organizations.image')
+        ->get();
+        if($jobs){
+            return response()->json(['jobs' => $jobs],Response::HTTP_OK);
         }
         else{
             return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -45,9 +49,9 @@ class JobController extends Controller
      */
     public function store(Request $request)
     {
-        $job = new Job();
         DB::beginTransaction();
         try {
+            $job = new Job();
             $job->title = $request->title;
             $job->start_date = $request->start_date;
             $job->end_date = $request->end_date;
