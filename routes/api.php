@@ -8,6 +8,7 @@ use App\Http\Controllers\Common\LanguageController;
 use App\Http\Controllers\Common\TypeController;
 use App\Http\Controllers\Organization\JobController;
 use App\Http\Controllers\Organization\OrganizationController;
+use App\Http\Controllers\User\ApplyController;
 use App\Http\Controllers\User\CVController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Http\Request;
@@ -26,19 +27,20 @@ use Illuminate\Support\Facades\Route;
 
 //user
 Route::prefix('user')->group(function(){
-    Route::get('/profile/{id}',[UserController::class,'edit']);
-    Route::post('/profile',[UserController::class,'update']);
+    Route::post('/profile/show',[UserController::class,'edit']);
+    Route::post('/profile/update',[UserController::class,'update']);
 
     Route::get('/cv/{id}',[CVController::class,'index']);
     Route::post('/cv/create',[CVController::class,'store']);
     Route::post('/cv/update',[CVController::class,'update']);
+    Route::post('/apply/create',[ApplyController::class,'store']);
 });
 
 
 //admin
 Route::prefix('admin')->group(function(){
-    Route::get('/profile/{id}',[AdminController::class,'edit']);
-    Route::post('/profile',[AdminController::class,'update']);
+    Route::post('/profile/show',[AdminController::class,'edit']);
+    Route::post('/profile/update',[AdminController::class,'update']);
     Route::get('/management/organizations',[ManagementController::class,'listOrganization']);
     Route::get('/management/users',[ManagementController::class,'listUser']);
     Route::get('/management/jobs',[ManagementController::class,'listJob']);
@@ -46,18 +48,20 @@ Route::prefix('admin')->group(function(){
     Route::post('/user/delete',[ManagementController::class,'deleteUser']);
     Route::post('/job/delete',[ManagementController::class,'deleteJob']);
     Route::post('/job/active',[ManagementController::class,'activeJob']);
+    Route::post('/job/status',[ManagementController::class,'activeStatusJob']);
     
 });
 
 //organization
 Route::prefix('organization')->group(function(){
-    Route::get('/profile/{id}',[OrganizationController::class,'edit']);
-    Route::post('/profile',[OrganizationController::class,'update']);
+    Route::post('/profile/show',[OrganizationController::class,'edit']);
+    Route::post('/profile/update',[OrganizationController::class,'update']);
 
     Route::post('/job/list',[JobController::class,'index']);
     Route::post('/job/create',[JobController::class,'store']);
     Route::post('/job/edit',[JobController::class,'edit']);
     Route::post('/job/update',[JobController::class,'update']);
+    Route::post('/job/detail',[JobController::class,'show']);
     
 });
 

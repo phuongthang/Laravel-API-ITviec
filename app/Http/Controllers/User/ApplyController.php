@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Apply;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
-class UserController extends Controller
+class ApplyController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -39,7 +39,26 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $applies = new Apply();
+            $applies->user_id = $request->user_id;
+            $applies->organization_id = $request->organization_id;
+            $applies->job_id = $request->job_id;
+            $applies->email = $request->email;
+            if ($request->has('image')) {
+                $file =  $request->file('image');
+                $fileName = time() . '.' . $file->getClientOriginalExtension();
+                $request->image->move(public_path("/upload/apply"), $fileName);
+                $applies->image = "/upload/apply" . "/" . $fileName;
+            }
+            $applies->save();
+            DB::commit();
+            return response()->json(Response::HTTP_OK);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -59,15 +78,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request)
+    public function edit($id)
     {
-        $user = User::find($request->id);
-        if($user){
-            return response()->json(['user' => $user],Response::HTTP_OK);
-        }
-        else{
-            return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        //
     }
 
     /**
@@ -77,35 +90,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        DB::beginTransaction();
-        try {
-            $user = User::find($request->id);
-            if($user){
-                $user->fullname = $request->fullname;
-                $user->position = $request->position;
-                $user->address = $request->address;
-                $user->phone = $request->phone;
-                $user->description = $request->description;
-                if ($request->has('image')) {
-                    $file =  $request->file('image');
-                    $fileName = time() . '.' . $file->getClientOriginalExtension();
-                    $request->image->move(public_path("/upload/user"), $fileName);
-                    $user->image = "/upload/user"."/".$fileName;
-                }
-
-                $user->save();
-
-                DB::commit();
-
-
-                return response()->json(Response::HTTP_OK);
-            }
-        } catch (Exception $e) {
-            DB::rollBack();
-            return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        //
     }
 
     /**

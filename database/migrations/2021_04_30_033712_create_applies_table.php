@@ -17,7 +17,7 @@ class CreateAppliesTable extends Migration
             $table->increments('id');
             $table->string('email');
             $table->string('image');
-            $table->integer('status');
+            $table->integer('status')->default(0);
             $table->timestamps();
 
             //Cột khóa ngoại 

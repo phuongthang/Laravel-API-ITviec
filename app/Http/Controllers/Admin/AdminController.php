@@ -59,14 +59,14 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request)
     {
-        $admin = Admin::find($id);
+        $admin = Admin::find($request->id);
         if($admin){
             return response()->json(['admin' => $admin],Response::HTTP_OK);
         }
         else{
-            return response()->json(['error' => 'error'],Response::HTTP_OK);
+            return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }

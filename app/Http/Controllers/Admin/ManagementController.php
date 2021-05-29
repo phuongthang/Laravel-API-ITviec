@@ -143,13 +143,41 @@ class ManagementController extends Controller
 
     }
 
-    public function ActiveJob(Request $request)
+    public function activeJob(Request $request)
     {
         DB::beginTransaction();
         try {
             $job = Job::find($request->id);
             if($job){
                 $job->active = $request->flag;
+
+                $job->save();
+
+                DB::commit();
+
+                return response()->json(Response::HTTP_OK);
+            }
+            else
+            {
+                return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+    }
+    public function activeStatusJob(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $job = Job::find($request->id);
+            if($job){
+                $job->status = $request->flag;
+                if($job->active === 1){
+                    $job->active = 0;
+                }
 
                 $job->save();
 
