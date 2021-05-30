@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\Apply;
+use App\Models\Review;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
-class ApplyController extends Controller
+class ReviewController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,19 +41,15 @@ class ApplyController extends Controller
     {
         DB::beginTransaction();
         try {
-            $applies = new Apply();
-            $applies->user_id = $request->user_id;
-            $applies->organization_id = $request->organization_id;
-            $applies->job_id = $request->job_id;
-            $applies->email = $request->email;
-            if ($request->has('image')) {
-                $file =  $request->file('image');
-                $fileName = time() . '.' . $file->getClientOriginalExtension();
-                $request->image->move(public_path("/upload/apply"), $fileName);
-                $applies->image = "/upload/apply" . "/" . $fileName;
-            }
-            $applies->save();
+            $review = new Review();
+            $review->content = $request->content;
+            $review->status = $request->status;
+            $review->organization_id = $request->organization_id;
+            $review->user_id = $request->user_id;
+            $review->save();
             DB::commit();
+
+
             return response()->json(Response::HTTP_OK);
         } catch (Exception $e) {
             DB::rollBack();
@@ -69,15 +65,13 @@ class ApplyController extends Controller
      */
     public function show(Request $request)
     {
-        $applies = DB::table('applies')
-        ->join('organizations', 'applies.organization_id', '=', 'organizations.id')
-        ->join('jobs', 'applies.job_id', '=', 'jobs.id')
-        ->join('users', 'applies.user_id', '=', 'users.id')
-        ->where([['jobs.organization_id',$request->organization_id],['jobs.id',$request->job_id]])
-        ->select('applies.*','users.fullname','users.position')
+        $reviews = DB::table('reviews')
+        ->join('users', 'reviews.user_id', '=', 'users.id')
+        ->where('reviews.organization_id',$request->organization_id)
+        ->select('reviews.*','users.fullname','users.image')
         ->get();
-        if($applies){
-            return response()->json(['applies' => $applies],Response::HTTP_OK);
+        if($reviews){
+            return response()->json(['reviews' => $reviews],Response::HTTP_OK);
         }
         else{
             return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -102,28 +96,9 @@ class ApplyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        DB::beginTransaction();
-        try {
-            $applies = Apply::find($request->id);
-            if($applies){
-                $applies->status = $request->flag;
-                $applies->save();
-
-                DB::commit();
-
-                return response()->json(Response::HTTP_OK);
-            }
-            else
-            {
-                return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
-            }
-
-        } catch (Exception $e) {
-            DB::rollBack();
-            return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        //
     }
 
     /**

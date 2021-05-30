@@ -10,6 +10,7 @@ use App\Http\Controllers\Organization\JobController;
 use App\Http\Controllers\Organization\OrganizationController;
 use App\Http\Controllers\User\ApplyController;
 use App\Http\Controllers\User\CVController;
+use App\Http\Controllers\User\ReviewController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +35,8 @@ Route::prefix('user')->group(function(){
     Route::post('/cv/create',[CVController::class,'store']);
     Route::post('/cv/update',[CVController::class,'update']);
     Route::post('/apply/create',[ApplyController::class,'store']);
+    Route::post('/review/create',[ReviewController::class,'store']);
+    Route::post('/review/show',[ReviewController::class,'show']);
 });
 
 
@@ -62,6 +65,8 @@ Route::prefix('organization')->group(function(){
     Route::post('/job/edit',[JobController::class,'edit']);
     Route::post('/job/update',[JobController::class,'update']);
     Route::post('/job/detail',[JobController::class,'show']);
+    Route::post('/apply/show',[ApplyController::class,'show']);
+    Route::post('/apply/status',[ApplyController::class,'update']);
     
 });
 
