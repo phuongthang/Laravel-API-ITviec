@@ -74,7 +74,7 @@ class ApplyController extends Controller
         ->join('jobs', 'applies.job_id', '=', 'jobs.id')
         ->join('users', 'applies.user_id', '=', 'users.id')
         ->where([['jobs.organization_id',$request->organization_id],['jobs.id',$request->job_id]])
-        ->select('applies.*','users.fullname','users.position')
+        ->select('applies.*','users.fullname','users.position','users.image as images')
         ->get();
         if($applies){
             return response()->json(['applies' => $applies],Response::HTTP_OK);

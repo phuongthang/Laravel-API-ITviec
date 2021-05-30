@@ -83,9 +83,14 @@ class CVController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
-        //
+        $cv = CV::where('user_id', $request->user_id)->get();
+        if ($cv) {
+            return response()->json(['data' => $cv->first()], Response::HTTP_OK);
+        } else {
+            return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**

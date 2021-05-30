@@ -37,6 +37,7 @@ Route::prefix('user')->group(function(){
     Route::post('/apply/create',[ApplyController::class,'store']);
     Route::post('/review/create',[ReviewController::class,'store']);
     Route::post('/review/show',[ReviewController::class,'show']);
+    Route::post('/cv/show',[CVController::class,'show']);
 });
 
 
