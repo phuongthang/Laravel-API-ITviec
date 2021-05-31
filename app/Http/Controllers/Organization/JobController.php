@@ -36,9 +36,19 @@ class JobController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function get()
     {
-        //
+        $jobs = DB::table('jobs')
+        ->join('organizations', 'jobs.organization_id', '=', 'organizations.id')
+        ->where([['jobs.flag_delete',1],['jobs.active',1],['jobs.status',1]])
+        ->select('jobs.*', 'organizations.image')
+        ->get();
+        if($jobs){
+            return response()->json(['jobs' => $jobs],Response::HTTP_OK);
+        }
+        else{
+            return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
