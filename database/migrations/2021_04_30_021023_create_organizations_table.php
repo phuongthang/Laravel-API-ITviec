@@ -26,7 +26,7 @@ class CreateOrganizationsTable extends Migration
             $table->string('address')->nullable();
             $table->string('description')->nullable();
             $table->string('image')->nullable();
-            $table->integer('status')->default(1);
+            $table->integer('active')->default(0);
             $table->integer('flag_delete')->default(1);
             $table->rememberToken();
             $table->timestamps();

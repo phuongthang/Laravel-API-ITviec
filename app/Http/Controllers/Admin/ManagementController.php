@@ -168,6 +168,31 @@ class ManagementController extends Controller
         }
 
     }
+    public function activeOrganization(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $job = Organization::find($request->id);
+            if($job){
+                $job->status = $request->flag;
+
+                $job->save();
+
+                DB::commit();
+
+                return response()->json(Response::HTTP_OK);
+            }
+            else
+            {
+                return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+    }
     public function activeStatusJob(Request $request)
     {
         DB::beginTransaction();

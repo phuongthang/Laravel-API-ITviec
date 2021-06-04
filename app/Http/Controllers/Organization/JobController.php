@@ -52,6 +52,26 @@ class JobController extends Controller
     }
 
     /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function query(Request $request)
+    {
+        $jobs = DB::table('jobs')
+        ->join('organizations', 'jobs.organization_id', '=', 'organizations.id')
+        ->where([['jobs.flag_delete',1],['jobs.active',1]])
+        ->select('jobs.*', 'organizations.image')
+        ->get();
+        if($jobs){
+            return response()->json(['jobs' => $jobs],Response::HTTP_OK);
+        }
+        else{
+            return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request

@@ -12,6 +12,7 @@ use App\Http\Controllers\User\ApplyController;
 use App\Http\Controllers\User\CVController;
 use App\Http\Controllers\User\ReviewController;
 use App\Http\Controllers\User\UserController;
+use App\Models\Organization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +40,8 @@ Route::prefix('user')->group(function(){
     Route::post('/review/show',[ReviewController::class,'show']);
     Route::post('/cv/show',[CVController::class,'show']);
     Route::get('/job/get',[JobController::class,'get']);
+    Route::post('/job/query',[JobController::class,'query']);
+    Route::get('/organization/get',[OrganizationController::class,'get']);
 });
 
 
@@ -54,6 +57,7 @@ Route::prefix('admin')->group(function(){
     Route::post('/job/delete',[ManagementController::class,'deleteJob']);
     Route::post('/job/active',[ManagementController::class,'activeJob']);
     Route::post('/job/status',[ManagementController::class,'activeStatusJob']);
+    Route::post('/organization/active',[ManagementController::class,'activeOrganization']);
     
 });
 

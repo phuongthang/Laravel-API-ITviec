@@ -16,9 +16,15 @@ class OrganizationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function get()
     {
-        //
+        $organizations = Organization::where([['flag_delete',1],['status',1]])->get();
+        if($organizations){
+            return response()->json(['organizations' => $organizations],Response::HTTP_OK);
+        }
+        else{
+            return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
