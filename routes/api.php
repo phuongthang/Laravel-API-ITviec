@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Address\AddressController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ManagementController;
@@ -27,6 +28,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//login
+Route::post('/login',[AccountController::class,'login']);
 //user
 Route::prefix('user')->group(function(){
     Route::post('/profile/show',[UserController::class,'edit']);

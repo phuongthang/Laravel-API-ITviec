@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
+use App\Models\Organization;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class AccountController extends Controller
@@ -13,13 +17,34 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function loginUser(Request $request)
+    public function login(Request $request)
     {
-        if (Auth::guard('user')
-        ->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
-
-            return response()->json(['OK'], 200);
+        if ($request->role === '0') {
+            $admin = Admin::where('email',$request->email)->first();
+            if($admin){
+                return response()->json(['data'=>$admin],Response::HTTP_OK);
+            }
+            else{
+                return response()->json(Response::HTTP_UNAUTHORIZED);
+            }
         }
-        return response()->json(['Fail'], 200);
+        if ($request->role === '1') {
+            $user = User::where('email',$request->email)->first();
+            if($user){
+                return response()->json(['data'=>$user],Response::HTTP_OK);
+            }
+            else{
+                return response()->json(Response::HTTP_UNAUTHORIZED);
+            }
+        }
+        if ($request->role === '2') {
+            $organization = Organization::where('email',$request->email)->first();
+            if($organization){
+                return response()->json(['data'=>$organization],Response::HTTP_OK);
+            }
+            else{
+                return response()->json(Response::HTTP_UNAUTHORIZED);
+            }
+        }
     }
 }

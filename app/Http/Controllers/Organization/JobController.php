@@ -21,8 +21,29 @@ class JobController extends Controller
         $jobs = DB::table('jobs')
         ->join('organizations', 'jobs.organization_id', '=', 'organizations.id')
         ->where([['jobs.flag_delete',1],['jobs.organization_id',$request->organization_id]])
-        ->select('jobs.*', 'organizations.image')
-        ->get();
+        ->select('jobs.*', 'organizations.image');
+        if($request->title){
+            $jobs->where('jobs.title', 'like', '%' . $request->title . '%');
+        }
+        if($request->province){
+            $jobs->where('jobs.province',$request->province);
+        }
+        if($request->language){
+            $jobs->where('jobs.language_id',$request->language);
+        }
+        if($request->type){
+            $jobs->where('jobs.type_id',$request->type);
+        }
+        if($request->experience){
+            $jobs->where('jobs.experience_id',$request->experience);
+        }
+        if($request->salary){
+            $valueAbout = explode('-', $request->salary);
+            if (count($valueAbout) == 2) {
+                $jobs->where([['jobs.salary', '>',(int) $valueAbout[0]], ['jobs.salary', '<=', (int)$valueAbout[1]]]);
+            }
+        }
+        $jobs = $jobs->get();
         if($jobs){
             return response()->json(['jobs' => $jobs],Response::HTTP_OK);
         }
@@ -60,9 +81,29 @@ class JobController extends Controller
     {
         $jobs = DB::table('jobs')
         ->join('organizations', 'jobs.organization_id', '=', 'organizations.id')
-        ->where([['jobs.flag_delete',1],['jobs.active',1]])
-        ->select('jobs.*', 'organizations.image')
-        ->get();
+        ->select('jobs.*', 'organizations.image')->where([['jobs.flag_delete',1],['jobs.active',1]]);
+        if($request->title){
+            $jobs->where('jobs.title', 'like', '%' . $request->title . '%');
+        }
+        if($request->province){
+            $jobs->where('jobs.province',$request->province);
+        }
+        if($request->language){
+            $jobs->where('jobs.language_id',$request->language);
+        }
+        if($request->type){
+            $jobs->where('jobs.type_id',$request->type);
+        }
+        if($request->experience){
+            $jobs->where('jobs.experience_id',$request->experience);
+        }
+        if($request->salary){
+            $valueAbout = explode('-', $request->salary);
+            if (count($valueAbout) == 2) {
+                $jobs->where([['jobs.salary', '>',(int)$valueAbout[0]], ['jobs.salary', '<=', (int)$valueAbout[1]]]);
+            }
+        }
+        $jobs = $jobs->get();
         if($jobs){
             return response()->json(['jobs' => $jobs],Response::HTTP_OK);
         }

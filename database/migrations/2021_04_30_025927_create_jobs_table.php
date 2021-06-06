@@ -24,7 +24,7 @@ class CreateJobsTable extends Migration
             $table->string('description')->nullable();
             $table->string('required')->nullable();
             $table->integer('count')->default(1);
-            $table->integer('status')->default(1);
+            $table->integer('status')->default(0);
             $table->integer('flag_delete')->default(1);
             $table->integer('active')->default(0);
             $table->timestamps();
