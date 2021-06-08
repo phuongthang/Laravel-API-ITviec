@@ -24,7 +24,7 @@ class CreateUsersTable extends Migration
             $table->string('position')->nullable();
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->integer('active')->default(0);
             $table->integer('flag_delete')->default(1);

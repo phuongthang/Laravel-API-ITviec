@@ -18,7 +18,11 @@ class OrganizationController extends Controller
      */
     public function get()
     {
-        $organizations = Organization::where([['flag_delete',1],['status',1]])->get();
+        $organizations = Organization::select(DB::raw('COUNT(jobs.organization_id) as count'),'organizations.*')
+        ->where([['organizations.flag_delete',1],['organizations.active',1]])
+        ->join('jobs','organizations.id','=','jobs.organization_id')
+        ->groupBy('jobs.organization_id')
+        ->get();
         if($organizations){
             return response()->json(['organizations' => $organizations],Response::HTTP_OK);
         }

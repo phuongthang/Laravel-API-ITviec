@@ -21,8 +21,8 @@ class CreateJobsTable extends Migration
             $table->string('position')->nullable();
             $table->string('salary')->nullable();
             $table->string('location')->nullable();
-            $table->string('description')->nullable();
-            $table->string('required')->nullable();
+            $table->text('description')->nullable();
+            $table->text('required')->nullable();
             $table->integer('count')->default(1);
             $table->integer('status')->default(0);
             $table->integer('flag_delete')->default(1);
@@ -44,7 +44,7 @@ class CreateJobsTable extends Migration
 
             $table->integer('ward')->unsigned();
             //Tạo liên kết khóa ngoại
-            $table->foreign('ward')->references('id')->on('districts');
+            $table->foreign('ward')->references('id')->on('wards');
         });
     }
 

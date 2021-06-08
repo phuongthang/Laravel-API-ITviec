@@ -28,10 +28,10 @@ class OrganizationSeeder extends Seeder
 
         ]);
         DB::table('organizations')->insert([
-            'username' => 'beetinnovator',
-            'email' => 'beetinnovator@beetechsoft.vn',
+            'username' => 'garena',
+            'email' => 'garena@beetechsoft.vn',
             'password' => Hash::make('123456'),
-            'fullname'=> 'BeetInnovator',
+            'fullname'=> 'Garena',
             'field' => 'Software',
             'establishment'=> '2000-01-01',
             'phone' => '0344771283',

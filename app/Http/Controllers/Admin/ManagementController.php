@@ -54,7 +54,7 @@ class ManagementController extends Controller
         $jobs = DB::table('jobs')
         ->join('organizations', 'jobs.organization_id', '=', 'organizations.id')
         ->where('jobs.flag_delete',1)
-        ->select('jobs.*', 'organizations.image', 'organizations.fullname')
+        ->select('jobs.*','organizations.id as organization_id', 'organizations.image', 'organizations.fullname')
         ->get();
         if($jobs){
             return response()->json(['jobs' => $jobs],Response::HTTP_OK);
@@ -174,7 +174,7 @@ class ManagementController extends Controller
         try {
             $job = Organization::find($request->id);
             if($job){
-                $job->status = $request->flag;
+                $job->active = $request->flag;
 
                 $job->save();
 
