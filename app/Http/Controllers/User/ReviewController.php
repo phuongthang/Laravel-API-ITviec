@@ -46,6 +46,7 @@ class ReviewController extends Controller
             $review->status = $request->status;
             $review->organization_id = $request->organization_id;
             $review->user_id = $request->user_id;
+            $review->vote = $request->vote;
             $review->save();
             DB::commit();
 
@@ -70,8 +71,14 @@ class ReviewController extends Controller
         ->where('reviews.organization_id',$request->organization_id)
         ->select('reviews.*','users.fullname','users.image')
         ->get();
+
+        $total = DB::table('reviews')
+        ->join('users', 'reviews.user_id', '=', 'users.id')
+        ->where('reviews.organization_id',$request->organization_id)
+        ->select(DB::raw('SUM(reviews.vote) as total'))
+        ->first();
         if($reviews){
-            return response()->json(['reviews' => $reviews],Response::HTTP_OK);
+            return response()->json(['reviews' => $reviews,'total'=>$total],Response::HTTP_OK);
         }
         else{
             return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
