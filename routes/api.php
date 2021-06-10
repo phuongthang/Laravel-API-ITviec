@@ -45,6 +45,7 @@ Route::prefix('user')->group(function(){
     Route::get('/job/get',[JobController::class,'get']);
     Route::post('/job/query',[JobController::class,'query']);
     Route::get('/organization/get',[OrganizationController::class,'get']);
+    Route::post('/apply/confirm',[ApplyController::class,'get']);
 });
 
 

@@ -85,6 +85,29 @@ class ApplyController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function get(Request $request)
+    {
+        $confirms = DB::table('applies')
+        ->join('organizations', 'applies.organization_id', '=', 'organizations.id')
+        ->join('jobs', 'applies.job_id', '=', 'jobs.id')
+        ->join('users', 'applies.user_id', '=', 'users.id')
+        ->where('users.id',$request->user_id)
+        ->select('applies.*','organizations.image as images','jobs.title','organizations.id as organization_id','jobs.id as job_id')
+        ->get();
+        if($confirms){
+            return response()->json(['confirms' => $confirms],Response::HTTP_OK);
+        }
+        else{
+            return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id

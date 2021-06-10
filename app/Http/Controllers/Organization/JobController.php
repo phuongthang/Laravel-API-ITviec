@@ -163,8 +163,19 @@ class JobController extends Controller
         ->where([['jobs.flag_delete',1],['jobs.organization_id',$request->organization_id],['jobs.id',$request->job_id]])
         ->select('jobs.*', 'organizations.image','organizations.description as organization_description','organizations.field','organizations.fullname')
         ->first();
+
+        $active = DB::table('applies')
+        ->where([['job_id',$request->job_id],['status',1]])
+        ->select(DB::raw('COUNT(status) as count'))
+        ->first();
+
+        $total = DB::table('applies')
+        ->where('job_id',$request->job_id)
+        ->select(DB::raw('COUNT(status) as count'))
+        ->first();
+
         if($jobs){
-            return response()->json(['jobs' => $jobs],Response::HTTP_OK);
+            return response()->json(['jobs' => $jobs,'active'=>$active,'total'=>$total],Response::HTTP_OK);
         }
         else{
             return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
