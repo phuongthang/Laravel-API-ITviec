@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\CV;
 use App\Models\Job;
 use App\Models\Organization;
 use App\Models\User;
@@ -58,6 +59,22 @@ class ManagementController extends Controller
         ->get();
         if($jobs){
             return response()->json(['jobs' => $jobs],Response::HTTP_OK);
+        }
+        else{
+            return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    public function listCV()
+    {
+        $cvs = DB::table('cvs')
+        ->join('users', 'cvs.user_id', '=', 'users.id')
+        ->where('cvs.flag_delete',1)
+        ->select('cvs.*', 'users.image', 'users.fullname')
+        ->get();
+        if($cvs){
+            return response()->json(['cvs' => $cvs],Response::HTTP_OK);
         }
         else{
             return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -143,6 +160,32 @@ class ManagementController extends Controller
 
     }
 
+    public function deleteCV(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $cv = CV::find($request->id);
+            if($cv){
+                $cv->flag_delete = 0;
+
+                $cv->save();
+
+                DB::commit();
+
+                return response()->json(Response::HTTP_OK);
+            }
+            else
+            {
+                return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
     public function activeJob(Request $request)
     {
         DB::beginTransaction();
@@ -152,6 +195,32 @@ class ManagementController extends Controller
                 $job->active = $request->flag;
 
                 $job->save();
+
+                DB::commit();
+
+                return response()->json(Response::HTTP_OK);
+            }
+            else
+            {
+                return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    public function activeCV(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $cv = CV::find($request->id);
+            if($cv){
+                $cv->active = $request->flag;
+
+                $cv->save();
 
                 DB::commit();
 

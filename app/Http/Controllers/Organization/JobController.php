@@ -226,6 +226,8 @@ class JobController extends Controller
             $job->type_id = (int)$request->type;
             $job->experience_id = (int)$request->experience;
             $job->language_id = (int)$request->language;
+            $job->status = 0;
+            $job->active = 0;
 
             $job->save();
             DB::commit();

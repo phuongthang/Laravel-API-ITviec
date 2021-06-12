@@ -34,6 +34,26 @@ class CVController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function get()
+    {
+        $cvs = DB::table('cvs')
+        ->join('users', 'cvs.user_id', '=', 'users.id')
+        ->join('offers', 'offers.user_id', '=', 'users.id')
+        ->where([['cvs.flag_delete',1],['cvs.active',1]])
+        ->select('cvs.*', 'users.image', 'users.fullname',DB::raw('COUNT(offers.user_id) as count'))
+        ->get();
+        if($cvs){
+            return response()->json(['cvs' => $cvs],Response::HTTP_OK);
+        }
+        else{
+            return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response

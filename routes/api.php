@@ -8,6 +8,7 @@ use App\Http\Controllers\Common\ExperienceController;
 use App\Http\Controllers\Common\LanguageController;
 use App\Http\Controllers\Common\TypeController;
 use App\Http\Controllers\Organization\JobController;
+use App\Http\Controllers\Organization\OfferController;
 use App\Http\Controllers\Organization\OrganizationController;
 use App\Http\Controllers\User\ApplyController;
 use App\Http\Controllers\User\CVController;
@@ -46,6 +47,8 @@ Route::prefix('user')->group(function(){
     Route::post('/job/query',[JobController::class,'query']);
     Route::get('/organization/get',[OrganizationController::class,'get']);
     Route::post('/apply/confirm',[ApplyController::class,'get']);
+    Route::post('/management/offer',[OfferController::class,'index']);
+
 });
 
 
@@ -56,12 +59,16 @@ Route::prefix('admin')->group(function(){
     Route::get('/management/organizations',[ManagementController::class,'listOrganization']);
     Route::get('/management/users',[ManagementController::class,'listUser']);
     Route::get('/management/jobs',[ManagementController::class,'listJob']);
+    Route::get('/management/cvs',[ManagementController::class,'listCV']);
     Route::post('/organization/delete',[ManagementController::class,'deleteOrganization']);
     Route::post('/user/delete',[ManagementController::class,'deleteUser']);
     Route::post('/job/delete',[ManagementController::class,'deleteJob']);
     Route::post('/job/active',[ManagementController::class,'activeJob']);
+    Route::post('/cv/delete',[ManagementController::class,'deleteCV']);
+    Route::post('/cv/active',[ManagementController::class,'activeCV']);
     Route::post('/job/status',[ManagementController::class,'activeStatusJob']);
     Route::post('/organization/active',[ManagementController::class,'activeOrganization']);
+    Route::get('/cv/get',[CVController::class,'get']);
     
 });
 
@@ -77,6 +84,7 @@ Route::prefix('organization')->group(function(){
     Route::post('/job/detail',[JobController::class,'show']);
     Route::post('/apply/show',[ApplyController::class,'show']);
     Route::post('/apply/status',[ApplyController::class,'update']);
+    Route::post('/offer/create',[OfferController::class,'store']);
     
 });
 
