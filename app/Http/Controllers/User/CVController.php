@@ -42,9 +42,8 @@ class CVController extends Controller
     {
         $cvs = DB::table('cvs')
         ->join('users', 'cvs.user_id', '=', 'users.id')
-        ->join('offers', 'offers.user_id', '=', 'users.id')
         ->where([['cvs.flag_delete',1],['cvs.active',1]])
-        ->select('cvs.*', 'users.image', 'users.fullname',DB::raw('COUNT(offers.user_id) as count'))
+        ->select('cvs.*', 'users.image', 'users.fullname')
         ->get();
         if($cvs){
             return response()->json(['cvs' => $cvs],Response::HTTP_OK);
@@ -113,6 +112,30 @@ class CVController extends Controller
         }
     }
 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function query(Request $request)
+    {
+        $cvs = DB::table('cvs')
+        ->join('users', 'cvs.user_id', '=', 'users.id')
+        ->select('cvs.*', 'users.image','users.address','users.fullname','users.position')->where('cvs.flag_delete',1);
+        if($request->title){
+            $cvs->where('users.position', 'like', '%' . $request->title . '%');
+        }
+        if($request->province){
+            $cvs->where('users.address', 'like', '%' . $request->province . '%');
+        }
+        $cvs = $cvs->get();
+        if($cvs){
+            return response()->json(['cvs' => $cvs],Response::HTTP_OK);
+        }
+        else{
+            return response()->json(Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
     /**
      * Show the form for editing the specified resource.
      *

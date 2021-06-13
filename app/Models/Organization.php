@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Auth\Organization as Authenticatable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
-class Organization extends Model
+class Organization extends Authenticatable
 {
     use Notifiable,HasFactory;
 
-    protected $table = 'organizations';
+    protected $guard = 'organization';
     /**
      * The attributes that are mass assignable.
      *
