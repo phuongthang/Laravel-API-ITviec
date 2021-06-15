@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Route;
 
 //login
 Route::post('/login',[AccountController::class,'login']);
+Route::post('/register',[AccountController::class,'register']);
 //user
 Route::prefix('user')->group(function(){
     Route::post('/profile/show',[UserController::class,'edit']);
