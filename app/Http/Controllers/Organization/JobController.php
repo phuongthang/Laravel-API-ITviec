@@ -82,6 +82,9 @@ class JobController extends Controller
         $jobs = DB::table('jobs')
         ->join('organizations', 'jobs.organization_id', '=', 'organizations.id')
         ->select('jobs.*', 'organizations.image')->where([['jobs.flag_delete',1],['jobs.status',1]]);
+        if($request->fullname){
+            $jobs->where('organizations.fullname', 'like', '%' . $request->fullname . '%');
+        }
         if($request->title){
             $jobs->where('jobs.title', 'like', '%' . $request->title . '%');
         }

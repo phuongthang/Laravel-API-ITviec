@@ -3,6 +3,7 @@
 use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Address\AddressController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\ManagementController;
 use App\Http\Controllers\Common\ExperienceController;
 use App\Http\Controllers\Common\LanguageController;
@@ -71,6 +72,9 @@ Route::prefix('admin')->group(function(){
     Route::post('/job/status',[ManagementController::class,'activeStatusJob']);
     Route::post('/organization/active',[ManagementController::class,'activeOrganization']);
     Route::get('/cv/get',[CVController::class,'get']);
+    Route::post('/blog/create',[BlogController::class,'store']);
+    Route::get('/blog/list',[BlogController::class,'index']);
+    Route::post('/blog/show',[BlogController::class,'show']);
     
 });
 
